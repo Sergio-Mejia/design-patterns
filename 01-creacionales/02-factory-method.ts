@@ -12,3 +12,79 @@
  * https://refactoring.guru/es/design-patterns/factory-method
  *
  */
+
+import { COLORS } from "../helpers/colors.ts";
+
+interface Hamburguer {
+  prepare(): void;
+}
+
+class ChickenHamburguer implements Hamburguer {
+  prepare(): void {
+    console.log("Preparando hamburguesa de %cpollo", COLORS.blue);
+  }
+}
+
+class BeefHamburguer implements Hamburguer {
+  prepare(): void {
+    console.log("Preparando hamburguesa de %cres", COLORS.green);
+  }
+}
+
+class BeanHamburguer implements Hamburguer {
+  prepare(): void {
+    console.log("Preparando hamburguesa de %cfrijol", COLORS.violet);
+  }
+}
+
+abstract class Restaurant {
+  abstract createHamburguer(): Hamburguer;
+
+  orderHamburguer(): void {
+    const hamburguer = this.createHamburguer();
+    hamburguer.prepare();
+  }
+}
+
+class ChickenRestaurant extends Restaurant {
+  override createHamburguer(): Hamburguer {
+    return new ChickenHamburguer();
+  }
+}
+
+class BeefRestaurant extends Restaurant {
+  override createHamburguer(): Hamburguer {
+    return new BeefHamburguer();
+  }
+}
+
+class BeanRestaurant extends Restaurant {
+  override createHamburguer(): Hamburguer {
+    return new BeanHamburguer();
+  }
+}
+
+function main() {
+  let restaurant: Restaurant;
+
+  const burgerType = prompt("¿Que tipo de hamburguesa quieres? (chicken/beef/bean)");
+
+  switch (burgerType) {
+    case "chicken":
+      restaurant = new ChickenRestaurant();
+      break;
+    case "beef":
+      restaurant = new BeefRestaurant();
+      break;
+    case "bean":
+      restaurant = new BeanRestaurant();
+      break;
+    default:
+      console.log("Opción no válida");
+      throw new Error("Opción no válida");
+  }
+
+  restaurant.orderHamburguer();
+}
+
+main();
