@@ -24,7 +24,7 @@
       el prompt para seleccionar el tipo de reporte.
  */
 
-import { COLORS } from '../helpers/colors.ts';
+import { COLORS } from "../helpers/colors.ts";
 
 // 1. Definir la interfaz Report
 interface Report {
@@ -35,13 +35,21 @@ interface Report {
 // Implementar SalesReport e InventoryReport
 
 class SalesReport implements Report {
-  // TODO: implementar el método e imprimir en consola:
-  // 'Generando reporte de ventas...'
+  generate(): void {
+    console.log("Generando reporte de %cventas...", COLORS.violet);
+  }
 }
 
 class InventoryReport implements Report {
-  // TODO: implementar el método e imprimir en consola:
-  // 'Generando reporte de inventario...'
+  generate(): void {
+    console.log("Generando reporte de %cinventario...", COLORS.green);
+  }
+}
+
+class AdminReport implements Report {
+  generate(): void {
+    console.log("Generando reporte de %cadministracion...", COLORS.pink);
+  }
 }
 
 // 3. Clase Base ReportFactory con el Método Factory
@@ -58,14 +66,20 @@ abstract class ReportFactory {
 // 4. Clases Concretas de Fábricas de Reportes
 
 class SalesReportFactory extends ReportFactory {
-  createReport(): Report {
-    throw new Error('Method not implemented.');
+  override createReport(): Report {
+    return new SalesReport();
   }
 }
 
 class InventoryReportFactory extends ReportFactory {
-  createReport(): Report {
-    throw new Error('Method not implemented.');
+  override createReport(): Report {
+    return new InventoryReport();
+  }
+}
+
+class AdminReportFactory extends ReportFactory {
+  override createReport(): Report {
+    return new AdminReport();
   }
 }
 
@@ -74,15 +88,14 @@ class InventoryReportFactory extends ReportFactory {
 function main() {
   let reportFactory: ReportFactory;
 
-  const reportType = prompt(
-    '¿Qué tipo de reporte deseas? %c(sales/inventory)',
-    COLORS.red
-  );
+  const reportType = prompt("¿Qué tipo de reporte deseas? (sales/inventory/admin)");
 
-  if (reportType === 'sales') {
+  if (reportType === "sales") {
     reportFactory = new SalesReportFactory();
-  } else {
+  } else if (reportType === "inventory") {
     reportFactory = new InventoryReportFactory();
+  } else {
+    reportFactory = new AdminReportFactory();
   }
 
   reportFactory.generateReport();
